@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="_template.xhtml">
+
+	<ui:define name="titulo">
+		Nova Movimentação
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form>
+			<p:messages id="messages" autoUpdate="true" />
+			<p:growl autoUpdate="true" />
+			<p:fieldset legend="Selecione a Conta">
+				<h:panelGrid columns="3">
+					<p:outputLabel for="contas" value="Titular da Conta:" />
+					<p:selectOneMenu id="contas" value="#{movimentacaoBean.idConta}">
+						<f:selectItems value="#{movimentacaoBean.contas}" var="conta"
+							itemLabel="#{conta.titular}" itemValue="#{conta.id}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:fieldset>
+
+			<br />
+			<br />
+
+			<p:fieldset legend="Dados da Movimentação" id="movimentacaoForm">
+				<h:panelGrid columns="2">
+					<p:outputLabel value="Descrição" for="descricao" />
+					<p:inputText id="descricao"
+						value="#{movimentacaoBean.movimentacao.descricao}" />
+
+					<p:outputLabel value="Data do Lançamento:" for="dataLancamento" />
+					<p:calendar id="dataLancamento"
+						value="#{movimentacaoBean.movimentacao.data.time}"
+						pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+
+					<p:outputLabel value="Preço:" for="preco" />
+					<p:inputText id="preco"
+						value="#{movimentacaoBean.movimentacao.valor}" />
+					<p:commandButton value="Gravar" action="#{movimentacaoBean.gravar}"
+						immediate="true" />
+					<p:commandButton value="Cancelar"
+						action="#{movimentacaoBean.cancelar}" immediate="true" />
+				</h:panelGrid>
+			</p:fieldset>
+		</h:form>
+		
+		<p:dataTable value="#{movimentacaoBean.contas}" var="conta"
+			id="tabelaContas" paginator="true" rows="4">
+			<p:column>
+				<f:facet name="header">id</f:facet>
+				<h:outputText value="#{conta.id}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">Banco</f:facet>
+				<h:outputText value="#{conta.banco}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">Agencia</f:facet>
+				<h:outputText value="#{conta.agencia}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">Numero</f:facet>
+				<h:outputText value="#{conta.numero}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">Titular</f:facet>
+				<h:outputText value="#{conta.titular}" />
+			</p:column>
+			<p:column style="width:4%">
+				<p:commandButton id="selectButton"
+					update=":tabelaContas"
+					oncomplete="movimentacoesDialog.show()" icon="ui-icon-search"
+					title="View">
+					<f:setPropertyActionListener value="#{conta}" target="#{movimentacaoBean.contaSelecionada}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+
+		<p:dialog header="Movimentacoes da conta"
+			widgetVar="movimentacoesDialog" resizable="false"
+			id="movimentacaoesDlg" showEffect="fade" hideEffect="explode"
+			modal="true">
+			<p:dataTable value="#{movimentacaoBean.movimentacoes}"
+				var="movimentacao" id="tabelaMovimentacoes">
+				<p:column>
+					<f:facet name="header">id</f:facet>
+					<h:outputText value="#{movimentacao.id}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Descricao</f:facet>
+					<h:outputText value="#{movimentacao.descricao}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Data</f:facet>
+					<h:outputText value="#{movimentacao.data.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Valor</f:facet>
+					<h:outputText value="#{movimentacao.valor}">
+						<f:convertNumber type="currency" pattern="R$ #0.00"
+							currencySymbol="R$" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>
+</html>

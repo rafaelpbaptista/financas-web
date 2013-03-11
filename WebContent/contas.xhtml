@@ -9,7 +9,7 @@
 <ui:composition template="_template.xhtml">
 
 	<ui:define name="titulo">
-			Financas On-line
+		Nova Conta
 	</ui:define>
 
 	<ui:define name="conteudo">
@@ -68,19 +68,6 @@
 			<p:column>
 				<f:facet name="header">Titular</f:facet>
 				<h:outputText value="#{conta.titular}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">Ações</f:facet>
-				<h:form>
-					<h:commandLink value="Remover" action="#{contasBean.remove}">
-						<f:setPropertyActionListener value="#{conta}"
-							target="#{contasBean.conta}" />
-					</h:commandLink> |
-        			<h:commandLink value="Alterar">
-						<f:setPropertyActionListener value="#{conta}"
-							target="#{contasBean.conta}" />
-					</h:commandLink>
-				</h:form>
 			</p:column>
 		</p:dataTable>
 	</ui:define>

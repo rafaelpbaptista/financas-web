@@ -1,5 +1,6 @@
 package br.com.caelum.financas.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -12,7 +13,10 @@ import br.com.caelum.financas.util.JPAUtil;
 
 @ViewScoped
 @ManagedBean
-public class ContasBean {
+public class ContasBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private Conta conta = new Conta();
 	private List<Conta> contas;
 
@@ -23,37 +27,17 @@ public class ContasBean {
 		em.getTransaction().begin();
 		ContaDAO dao = new ContaDAO(em);
 
-		// Bastaria usar o metodo merge no lugar do persist
 		if (this.conta.getId() != null) {
 			dao.altera(conta);
 		} else {
 			dao.adiciona(conta);
 		}
+
 		contas = dao.lista();
-
-		em.getTransaction().commit();
-		em.close();
-
 		conta = new Conta();
 
-	}
-
-	public void remove() {
-		System.out.println("Removendo a conta");
-
-		EntityManager em = new JPAUtil().getEntityManager();
-		em.getTransaction().begin();
-
-		ContaDAO dao = new ContaDAO(em);
-		Conta contaParaRemover = dao.busca(this.conta.getId());
-
-		dao.remove(contaParaRemover);
-		contas = dao.lista();
-
 		em.getTransaction().commit();
 		em.close();
-
-		limpaFormularioDoJSF();
 
 	}
 
@@ -78,11 +62,4 @@ public class ContasBean {
 		return contas;
 	}
 
-	/**
-	 * Esse m??todo apenas limpa o formul??rio da forma com que o JSF espera.
-	 * Invoque-o no momento em que precisar do formul??rio vazio.
-	 */
-	private void limpaFormularioDoJSF() {
-		this.conta = new Conta();
-	}
 }

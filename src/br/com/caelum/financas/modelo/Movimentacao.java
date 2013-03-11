@@ -1,5 +1,6 @@
 package br.com.caelum.financas.modelo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
@@ -16,7 +17,9 @@ import javax.persistence.TemporalType;
 
 @NamedQuery(name = "Movimentacao.buscaTodasMovimentacoesDaConta", query = "select m from Movimentacao m where m.conta=:pConta")
 @Entity
-public class Movimentacao {
+public class Movimentacao implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
