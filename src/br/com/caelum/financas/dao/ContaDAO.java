@@ -2,37 +2,38 @@ package br.com.caelum.financas.dao;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import br.com.caelum.financas.modelo.Conta;
 
 public class ContaDAO {
 
-	private final DAO<Conta> dao;
-	
-	public ContaDAO(EntityManager em) {
-		dao = new DAO<Conta>(em,Conta.class);
+	private EntityManager manager;
+
+	@Inject
+	public ContaDAO(EntityManager manager) {
+		this.manager = manager;
 	}
 
 	public void adiciona(Conta t) {
-		dao.adiciona(t);
+		manager.persist(t);
 	}
 
 	public Conta busca(Integer id) {
-		return dao.busca(id);
+		return manager.find(Conta.class, id);
 	}
 
 	public List<Conta> lista() {
-		return dao.lista();
+		return manager.createNamedQuery("Conta.todas", Conta.class).getResultList();
 	}
 
 	public void remove(Conta t) {
-		dao.remove(t);
+		manager.remove(t);
 	}
 
 	public void altera(Conta t) {
-		dao.altera(t);
+		manager.merge(t);
 	}
-	
-	
+
 }

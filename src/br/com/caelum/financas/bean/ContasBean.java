@@ -1,44 +1,36 @@
 package br.com.caelum.financas.bean;
 
-import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.persistence.EntityManager;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.caelum.financas.dao.ContaDAO;
 import br.com.caelum.financas.modelo.Conta;
-import br.com.caelum.financas.util.JPAUtil;
+import br.com.caelum.financas.transaction.Transactional;
 
-@ViewScoped
-@ManagedBean
-public class ContasBean implements Serializable {
+@Named
+@RequestScoped
+public class ContasBean {
 
-	private static final long serialVersionUID = 1L;
-	
 	private Conta conta = new Conta();
 	private List<Conta> contas;
 
-	public void gravar() {
-		System.out.println("Gravando a conta");
+	@Inject
+	ContaDAO contaDao;
 
-		EntityManager em = new JPAUtil().getEntityManager();
-		em.getTransaction().begin();
-		ContaDAO dao = new ContaDAO(em);
+	@Transactional
+	public void gravar() {
 
 		if (this.conta.getId() != null) {
-			dao.altera(conta);
+			contaDao.altera(conta);
 		} else {
-			dao.adiciona(conta);
+			contaDao.adiciona(conta);
 		}
 
-		contas = dao.lista();
+		contas = contaDao.lista();
 		conta = new Conta();
-
-		em.getTransaction().commit();
-		em.close();
-
 	}
 
 	public Conta getConta() {
@@ -53,10 +45,7 @@ public class ContasBean implements Serializable {
 		System.out.println("Listando as contas");
 
 		if (contas == null) {
-			EntityManager em = new JPAUtil().getEntityManager();
-			ContaDAO dao = new ContaDAO(em);
-			contas = dao.lista();
-			em.close();
+			contas = contaDao.lista();
 		}
 
 		return contas;

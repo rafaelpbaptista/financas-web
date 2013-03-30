@@ -15,7 +15,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@NamedQuery(name = "Movimentacao.buscaTodasMovimentacoesDaConta", query = "select m from Movimentacao m where m.conta=:pConta")
+@NamedQuery(name = "Movimentacao.todos", query = "select m from Movimentacao m")
 @Entity
 public class Movimentacao implements Serializable {
 
@@ -26,7 +26,7 @@ public class Movimentacao implements Serializable {
 	private Integer id;
 	private String descricao;
 	@Temporal(TemporalType.TIMESTAMP)
-	private Calendar data;
+	private Calendar data = Calendar.getInstance();
 	private BigDecimal valor;
 
 	@Enumerated(EnumType.STRING)
