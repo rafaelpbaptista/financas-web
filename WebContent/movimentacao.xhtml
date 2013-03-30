@@ -15,58 +15,56 @@
 	<ui:define name="conteudo">
 		<h:form>
 			<p:messages id="messages" autoUpdate="true" />
-			<p:growl autoUpdate="true" />
 			<p:fieldset legend="Dados da Movimentação" id="movimentacaoForm">
 				<h:panelGrid columns="2">
 					<p:outputLabel for="contas" value="Titular da Conta:" />
-					<p:selectOneMenu id="contas" value="#{movimentacaoBean.idConta}">
+					<p:selectOneMenu id="contas" value="#{movimentacaoBean.idConta}" required="true">
 						<f:selectItems value="#{movimentacaoBean.contas}" var="conta"
 							itemLabel="#{conta.titular}" itemValue="#{conta.id}" />
 					</p:selectOneMenu>
-					
+
 					<p:outputLabel for="tipo" value="Tipo:" />
-					<p:selectOneMenu id="tipo" value="#{movimentacaoBean.movimentacao.tipoMovimentacao}">
-						<f:selectItems value="#{movimentacaoBean.tipos}"  />
+					<p:selectOneMenu id="tipo" required="true"
+						value="#{movimentacaoBean.movimentacao.tipoMovimentacao}">
+						<f:selectItems value="#{movimentacaoBean.tipos}" />
 					</p:selectOneMenu>
 
 					<p:outputLabel value="Descrição" for="descricao" />
 					<p:inputText id="descricao"
-						value="#{movimentacaoBean.movimentacao.descricao}" />
+						value="#{movimentacaoBean.movimentacao.descricao}" required="true" />
 
 					<p:outputLabel value="Data do Lançamento:" for="dataLancamento" />
-					<p:calendar id="dataLancamento"
+					<p:calendar id="dataLancamento" required="true"
 						value="#{movimentacaoBean.movimentacao.data.time}"
 						pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
 
 					<p:outputLabel value="Preço:" for="preco" />
-					<p:inputText id="preco" value="#{movimentacaoBean.movimentacao.valor}" >
-						<f:convertNumber locale="pt_BR"/>
+					<p:inputText id="preco"
+						value="#{movimentacaoBean.movimentacao.valor}" required="true">
+						<f:convertNumber locale="pt_BR" />
 					</p:inputText>
-						
-					<h:commandButton value="Gravar" actionListener="#{movimentacaoBean.gravar}" />
+
+					<p:commandButton value="Gravar"  update="@form, :formContas:tabelaContas" process="@form"
+						actionListener="#{movimentacaoBean.gravar}" />
 				</h:panelGrid>
 			</p:fieldset>
 		</h:form>
-		
+
 		<br />
-		
-		<h:form>
+
+		<h:form	id="formContas">
 			<p:dataTable value="#{movimentacaoBean.contas}" var="conta"
 				id="tabelaContas" paginator="true" rows="4">
-				<p:column>
-					<f:facet name="header">id</f:facet>
-					<h:outputText value="#{conta.id}" />
-				</p:column>
 				<p:column>
 					<f:facet name="header">Banco</f:facet>
 					<h:outputText value="#{conta.banco}" />
 				</p:column>
 				<p:column>
-					<f:facet name="header">Agencia</f:facet>
+					<f:facet name="header">Agência</f:facet>
 					<h:outputText value="#{conta.agencia}" />
 				</p:column>
 				<p:column>
-					<f:facet name="header">Numero</f:facet>
+					<f:facet name="header">Número</f:facet>
 					<h:outputText value="#{conta.numero}" />
 				</p:column>
 				<p:column>
@@ -74,33 +72,36 @@
 					<h:outputText value="#{conta.titular}" />
 				</p:column>
 				<p:column style="width:4%">
-					<p:commandButton id="selectButton"
-						update=":tabelaMovimentacoes"
+					<p:commandButton id="selectButton" update=":tabelaMovimentacoes"
 						oncomplete="movimentacoesDialog.show()" icon="ui-icon-search"
-						title="View" action="#{movimentacaoBean.carregaMovimentacoesDaConta}">
-						<f:setPropertyActionListener value="#{conta}" target="#{movimentacaoBean.contaSelecionada}" />
+						title="Detalhes" >
+						<f:setPropertyActionListener value="#{conta}"
+							target="#{movimentacaoBean.contaSelecionada}" />
 					</p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</h:form>
 
-		<p:dialog header="Movimentacoes da conta"
+		<p:dialog header="Movimentações da conta"
 			widgetVar="movimentacoesDialog" resizable="false"
 			id="movimentacaoesDlg" showEffect="fade" hideEffect="explode"
 			modal="true">
-			<p:dataTable value="#{movimentacaoBean.movimentacoes}"
+			
+			<h:outputText value="#{contaSelecionada.titular}" />
+			
+			<p:dataTable value="#{movimentacaoBean.contaSelecionada.movimentacoes}"
 				var="movimentacao" id="tabelaMovimentacoes">
-				
+
 				<p:column>
 					<f:facet name="header">Tipo</f:facet>
 					<h:outputText value="#{movimentacao.tipoMovimentacao}" />
 				</p:column>
-				
+
 				<p:column>
-					<f:facet name="header">Descricao</f:facet>
+					<f:facet name="header">Descrição</f:facet>
 					<h:outputText value="#{movimentacao.descricao}" />
 				</p:column>
-				
+
 				<p:column>
 					<f:facet name="header">Data</f:facet>
 					<h:outputText value="#{movimentacao.data.time}">
@@ -108,7 +109,7 @@
 							timeZone="America/Sao_Paulo" />
 					</h:outputText>
 				</p:column>
-				
+
 				<p:column>
 					<f:facet name="header">Valor</f:facet>
 					<h:outputText value="#{movimentacao.valor}">

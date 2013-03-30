@@ -1,5 +1,0 @@
-<beans>
-   <interceptors>
-      <class>br.com.caelum.financas.transaction.TransactionInterceptor</class>
-   </interceptors>
-</beans>

@@ -4,8 +4,4 @@ public enum TipoMovimentacao {
 
 	ENTRADA, SAIDA;
 
-	public String getNome() {
-		return this.name();
-	}
-
 }
