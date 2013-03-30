@@ -1,5 +1,8 @@
 *.class
 
+.settings
+.metadata
+
 # Package Files #
 *.war
 *.ear
