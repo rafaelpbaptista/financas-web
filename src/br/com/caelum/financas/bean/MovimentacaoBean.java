@@ -39,7 +39,15 @@ public class MovimentacaoBean {
 
 		movimentacaoDao.adiciona(this.movimentacao);
 
+		criaMensagemDeSucesso();
+		limpaFormulario();
+	}
+
+	private void limpaFormulario() {
 		this.movimentacao = new Movimentacao();
+	}
+
+	private void criaMensagemDeSucesso() {
 		FacesContext.getCurrentInstance().addMessage("messages",
 				new FacesMessage("Movimentação adicionada"));
 	}
@@ -75,8 +83,8 @@ public class MovimentacaoBean {
 	public SelectItem[] getTipos() {
 		SelectItem[] items = new SelectItem[TipoMovimentacao.values().length];
 		int i = 0;
-		for (TipoMovimentacao g : TipoMovimentacao.values()) {
-			items[i++] = new SelectItem(g, g.name());
+		for (TipoMovimentacao tipo : TipoMovimentacao.values()) {
+			items[i++] = new SelectItem(tipo, tipo.name());
 		}
 		return items;
 	}

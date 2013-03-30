@@ -1,6 +1,5 @@
 package br.com.caelum.financas.modelo;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -12,9 +11,7 @@ import javax.persistence.OneToMany;
 
 @NamedQuery(name = "Conta.todas", query = "select c from Conta c")
 @Entity
-public class Conta implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class Conta {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
